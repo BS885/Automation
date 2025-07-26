@@ -24,7 +24,9 @@ pipeline {
             steps {
                 echo "Starting checkout from ${params.REPO_URL}, branch ${params.BRANCH_NAME}"
 
-                git branch: "${params.BRANCH_NAME}", url: "${params.REPO_URL}"
+                git branch: "${params.BRANCH_NAME}",
+                    credentialsId: 'd955d1c6-5900-4805-931a-29ab45b85965',
+                    url: "${params.REPO_URL}"
 
                 echo "Code checkout completed successfully"
             }
