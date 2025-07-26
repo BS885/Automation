@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     parameters {
-        string(name: 'REPO_URL', defaultValue: 'https://github.com/user/repo.git', description: 'Git repository URL')
+        string(name: 'REPO_URL', defaultValue: 'https://github.com/BS885/Automation', description: 'Git repository URL')
         string(name: 'BRANCH_NAME', defaultValue: 'main', description: 'Branch name')
     }
 
