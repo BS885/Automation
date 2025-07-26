@@ -12,7 +12,6 @@ pipeline {
 
     triggers {
         cron('30 5 * * 1-5')
-//         cron('0 14 * * *')
     }
 
     stages {
@@ -31,12 +30,21 @@ pipeline {
                 echo "Code checkout completed successfully"
             }
         }
+
         stage('Check Maven Installation') {
             steps {
                 echo "Checking if Maven is installed..."
-                sh 'mvn -version || echo "Maven is NOT installed on this agent."'
+                sh '''
+                    if ! command -v mvn &> /dev/null; then
+                        echo "Maven is NOT installed on this agent."
+                        exit 1
+                    else
+                        mvn -version
+                    fi
+                '''
             }
         }
+
         stage('Compile') {
             options {
                 timeout(time: 5, unit: 'MINUTES')
@@ -56,6 +64,19 @@ pipeline {
                 echo "Starting test stage"
                 sh 'mvn test'
                 echo "Test stage completed successfully"
+            }
+        }
+
+        stage('Build Docker Image') {
+            when {
+                expression { fileExists('Dockerfile') }
+            }
+            steps {
+                echo 'Building Docker image...'
+                sh '''
+                    docker build -t my-app:${BUILD_NUMBER} .
+                '''
+                echo 'Docker image built successfully.'
             }
         }
     }
