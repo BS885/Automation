@@ -31,7 +31,12 @@ pipeline {
                 echo "Code checkout completed successfully"
             }
         }
-
+        stage('Check Maven Installation') {
+            steps {
+                echo "Checking if Maven is installed..."
+                sh 'mvn -version || echo "Maven is NOT installed on this agent."'
+            }
+        }
         stage('Compile') {
             options {
                 timeout(time: 5, unit: 'MINUTES')
